@@ -2,43 +2,45 @@
 import os
 
 import discord
+import random
 from dotenv import load_dotenv
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-class CustomClient(discord.client) :
-    async def on_ready(self):
-        print(f'{self.user} has connected to discord!')
+bot = commands.Bot(command_prefix='!')
 
 
-
-
-
-client = CustomClient()
-commands = {
-
-}
-
-@client.event
+@bot.event
 async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
+    print(f'{bot.user.name} has connected to Discord!')
 
-@client.event
+@bot.event
 async def on_member_join(member):
     await member.create_dm()
     await member.dm_channel.send(f'welcome to the server')
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content =
 
-    elif message.content == 'raise-exception':
-        raise discord.DiscordException
+@bot.event
+async def on_error(event, *args, **kwargs):
+    with open('err.log', 'a') as f:
+        if event == 'on_message' :
+            f.write(f'Unhandled message: {args[0]}\n')
+        else:
+            raise
 
-@client.event
+@bot.command(name='roll')
+async def rollEx(ctx, number_of_dice: int, trick):
+    dice = [
+        str(random.choice(range(1,10 + 1)))
+        for _ in range(number_of_dice)
+        ]
+    await ctx.send(', '.join(dice))
+
+@bot.command(name='GenerateName')
+async def generateName(ctx):
 
 
-client.run(TOKEN)
+
+bot.run(TOKEN)
